@@ -12,7 +12,10 @@ It helps emergency responders:
 - Understand incidents faster  
 - Eliminate duplicate reports  
 - Prioritize emergencies intelligently  
-- Take informed actions in real-time  
+- Take informed actions in real-time
+
+  <img width="988" height="554" alt="image" src="https://github.com/user-attachments/assets/5d2f5c63-c232-42a8-a571-d1b99ae29c21" />
+
 
 ---
 
@@ -40,7 +43,10 @@ Our system uses **AI + real-time processing** to:
 - 🔗 Merge multiple calls into one incident  
 - 🚨 Assign priority (High / Medium / Low)  
 - 🤖 Generate AI insights  
-- 🎯 Recommend actionable steps  
+- 🎯 Recommend actionable steps
+
+  <img width="957" height="565" alt="image" src="https://github.com/user-attachments/assets/052fdaea-e417-4af5-8ed9-89e2b2271192" />
+
 
 ---
 
@@ -90,4 +96,7 @@ Our system uses **AI + real-time processing** to:
 
 ## ⚙️ Installation & Setup
 
-### 1. cd/backend ..... node server.js .....cd/frontend ...... npm run dev
+### 1. cd/backend 
+### node server.js 
+### 2. cd/frontend 
+### npm run dev
