@@ -7,6 +7,7 @@ import FormData from "form-data";
 import fs from "fs";
 import http from "http";
 import { Server } from "socket.io";
+import {generateAIResponse} from "./aiEngine.js";
 
 dotenv.config();
 
@@ -204,7 +205,7 @@ function mergeIncident(existing, incoming) {
 ========================= */
 
 app.get("/state", (req, res) => {
-  res.json({ calls, incidents, insights });
+  res.json({ calls, incidents, insights, actions: [] });
 });
 
 /*  MAIN */
@@ -256,6 +257,23 @@ app.post("/process-audio", upload.single("audio"), async (req, res) => {
     };
 
     calls.unshift(newCall);
+
+    const aiData = await generateAIResponse(transcript, incident);
+
+// add priority to incident
+incident.priority = aiData.priority;
+
+// update insights (replace old one)
+insights = aiData.insights.map((ins, i) => ({
+  id: Date.now() + i,
+  message: ins.message,
+  severity: ins.severity,
+}));
+
+// OPTIONAL (store actions if you want later)
+const actions = aiData.actions || [];
+
+
     const aiInsights = await generateInsights(transcript, incident);
 
 insights = aiInsights.map((ins, i) => ({
@@ -266,7 +284,7 @@ insights = aiInsights.map((ins, i) => ({
     fs.unlinkSync(filePath);
 
     
-    io.emit("update", { calls, incidents, insights });
+    io.emit("update", { calls, incidents, insights, actions});
 
     res.json({ transcript, incident });
   } catch (err) {

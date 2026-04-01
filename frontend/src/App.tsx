@@ -5,11 +5,13 @@ import CallsPanel from "./components/CallsPanel";
 import TranscriptPanel from "./components/TranscriptPanel";
 import IncidentPanel from "./components/IncidentPanel";
 import AIInsightsPanel from "./components/AIInsightsPanel";
+import ActionsPanel from "./components/ActionsPanel"; // ✅ NEW
 
 function App() {
   const [data, setData] = useState<any>(null);
   const [file, setFile] = useState<File | null>(null);
   const [activeCallId, setActiveCallId] = useState<number | null>(null);
+  const [actions, setActions] = useState<any[]>([]); // ✅ NEW
 
   const activeCall =
     data?.calls?.find((c: any) => c.id === activeCallId) ||
@@ -21,20 +23,20 @@ function App() {
     data?.incidents?.[0] ||
     null;
 
-  // 🔥 LLM-ready insights (just pass data, backend will later generate)
   const insights = data?.insights || [];
 
   useEffect(() => {
-  const socket = io("http://localhost:5000");
+    const socket = io("http://localhost:5000");
 
-  socket.on("update", (incomingData: any) => {
-    setData(incomingData);
-  });
+    socket.on("update", (incomingData: any) => {
+      setData(incomingData);
+      setActions(incomingData.actions || []); // ✅ NEW
+    });
 
-  return () => {
-    socket.disconnect(); // ✅ cleanup function
-  };
-}, []);
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   const handleUpload = async () => {
     if (!file) return;
@@ -87,6 +89,8 @@ function App() {
         <TranscriptPanel call={activeCall} />
 
         <IncidentPanel incident={activeIncident} />
+
+        <ActionsPanel actions={actions} /> {/* ✅ NEW */}
 
         <AIInsightsPanel insights={insights} />
       </div>
